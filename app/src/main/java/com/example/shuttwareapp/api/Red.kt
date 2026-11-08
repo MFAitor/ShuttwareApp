@@ -9,7 +9,12 @@ import kotlin.jvm.java
 object Red {
 
     //Conexion con la IP donde alojo la API
-    private const val BASE_URL = "http://192.168.1.45:8080/"
+
+    //Para probar por id de wifi
+    private const val BASE_URL = "http://192.168.1.161:8080/"
+
+    //Para probar con ngrok
+    //private const val BASE_URL = "https://retreat-disrupt-recoup.ngrok-free.dev/"
 
     //Cliente que gestiona las peticiones
     private val cliente = OkHttpClient.Builder()

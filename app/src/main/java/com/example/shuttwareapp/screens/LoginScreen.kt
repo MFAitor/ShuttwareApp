@@ -1,99 +1,254 @@
 package com.example.shuttwareapp.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.shuttwareapp.api.Red
-import kotlinx.coroutines.launch
+import androidx.compose.ui.unit.sp
+import com.example.shuttwareapp.R
+import com.example.shuttwareapp.api.ApiService
+import com.example.shuttwareapp.viewmodel.AuthViewModel
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun LoginScreen(onLoginCorrecto: () -> Unit) {
+fun LoginScreen(
+    apiService: ApiService,
+    authViewModel: AuthViewModel,
+    onLoginOk: () -> Unit,
+    onRegister: () -> Unit = {}
+) {
     var email by remember { mutableStateOf("") }
-    var contrasenia by remember { mutableStateOf("") }
-    var mensaje by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
-    Column(
+    //Variable para gestionar los permisos del sistema
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        // Puedes guardar si se concedió o no, pero no es obligatorio
+    }
+
+    val context = LocalContext.current
+
+    var mostrarDialogoRecuperacion by remember { mutableStateOf(false) }
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF344B66),
+                        Color(0xFF617F9B),
+                        Color(0xFFC5A18F),
+                        Color(0xFFFFD0B0)
+                    ),
+                    start = Offset(0f, 0f),
+                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+                )
+            )
     ) {
-        Text("Shuttware")
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.shuttware_logo_no_brackground),
+                contentDescription = "Logo Shuttware",
+                modifier = Modifier.size(180.dp)
+            )
 
-        Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
-        )
+            Text(
+                text = "S H U T T W A R E",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Light,
+                letterSpacing = 4.sp
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-        OutlinedTextField(
-            value = contrasenia,
-            onValueChange = { contrasenia = it },
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(28.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F6F4))
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp)
+                ) {
+                    Text(
+                        text = "A C C E D E R",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 6.sp,
+                        modifier = Modifier.padding(bottom = 20.dp)
+                    )
 
-        Spacer(modifier = Modifier.height(16.dp))
+                    Text("Email", fontSize = 13.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true
+                    )
 
-        Button(
-            onClick = {
-                scope.launch {
-                    try {
-                        val respuesta = Red.api.login(
-                            mapOf(
-                                "email" to email,
-                                "contrasenia" to contrasenia
-                            )
-                        )
-                        if (respuesta.isSuccessful) {
-                            val cuerpo = respuesta.body()
-                            if (cuerpo?.get("ok") == true) {
-                                onLoginCorrecto()
-                            } else {
-                                mensaje = cuerpo?.get("mensaje")?.toString() ?: "Error"
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text("Contraseña", fontSize = 13.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None
+                        else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            TextButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Text(
+                                    if (passwordVisible) "Ocultar" else "Mostrar",
+                                    color = Color.Gray,
+                                    fontSize = 13.sp
+                                )
                             }
-                        } else {
-                            mensaje = "Error de red: ${respuesta.code()}"
                         }
-                    } catch (e: Exception) {
-                        mensaje = "No se pudo conectar: ${e.message}"
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    //Enlace para abrir el dialogo de recuperacion
+                    Text(
+                        text = "¿Olvidaste tu contraseña?",
+                        color = Color(0xFF4A90E2),
+                        fontSize = 13.sp,
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .clickable { mostrarDialogoRecuperacion = true }
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Button(
+                        onClick = {
+                            authViewModel.login(
+                                context = context,
+                                apiService = apiService,
+                                email = email,
+                                password = password,
+                                onSuccess = {
+                                    // Pedir permiso de notificaciones
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    }
+
+                                    onLoginOk()
+                                }
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A90E2))
+                    ) {
+                        Text("Iniciar sesión", fontSize = 16.sp)
+                    }
+
+                    if (authViewModel.error != null) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = authViewModel.error!!,
+                            color = Color.Red,
+                            fontSize = 13.sp,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text("¿Aún no tienes cuenta? ", color = Color.Gray, fontSize = 13.sp)
+                        Text(
+                            text = "Regístrate",
+                            color = Color(0xFF4A90E2),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.clickable { onRegister() }
+                        )
                     }
                 }
+            }
+        }
+    }
+
+    //Dialogo que indica que el fotografo resetea la contrasenia
+    if (mostrarDialogoRecuperacion) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoRecuperacion = false },
+            title = { Text("¿Has olvidado tu contraseña?") },
+            text = {
+                Text(
+                    "Ponte en contacto con tu fotógrafo " +
+                            "para solicitar la recuperación de tu contraseña."
+                )
             },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Entrar")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (mensaje.isNotEmpty()) {
-            Text(mensaje)
-        }
+            confirmButton = {
+                TextButton(
+                    onClick = { mostrarDialogoRecuperacion = false }
+                ) {
+                    Text("Entendido")
+                }
+            }
+        )
     }
 }
