@@ -17,46 +17,37 @@ class HuecosWorker(
 
     override suspend fun doWork(): Result {
         return try {
+
+            //Recuperacion de ultimo ID usado
             val prefs = applicationContext.getSharedPreferences("shuttware", Context.MODE_PRIVATE)
             val ultimoId = prefs.getInt("ultimo_id_hueco", 0)
 
-            // Llamada a la API
+            //Consulta de si hay huecos disponibles
             val huecos = Red.api.obtenerHuecosLibres(ultimoId)
 
+            //Se guarda el ID mas alto si hay varios distintos
             if (huecos.isNotEmpty()) {
-                // Guardamos el id más alto visto
+
                 val maxId = huecos.maxOf { it.id_hueco }
+
                 prefs.edit().putInt("ultimo_id_hueco", maxId).apply()
 
-                mostrarNotificacion(huecos.size)
+                //Mostrar la notificacion con la cantidad de huecos
+                NotificacionHelper().mostrarNotificacion(
+                    applicationContext,
+                    "huecos_nuevos",
+                    "Huecos disponibles",
+                    "Nuevos huecos disponibles",
+                    "Hay ${huecos.size} hueco${if (huecos.size > 1) "s" else ""} libre${if (huecos.size > 1) "s" else ""}",
+                    1001
+                )
             }
 
             Result.success()
+
         } catch (e: Exception) {
+            //Se vuelve a intentar en caso de error
             Result.retry()
         }
-    }
-
-    private fun mostrarNotificacion(cantidad: Int) {
-        val channelId = "huecos_nuevos"
-        val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Huecos disponibles",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            manager.createNotificationChannel(channel)
-        }
-
-        val notification = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // Cambia por tu icono
-            .setContentTitle("Nuevos huecos disponibles")
-            .setContentText("Hay $cantidad hueco${if (cantidad > 1) "s" else ""} libre${if (cantidad > 1) "s" else ""}")
-            .setAutoCancel(true)
-            .build()
-
-        manager.notify(1001, notification)
     }
 }

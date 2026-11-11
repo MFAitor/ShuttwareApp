@@ -21,9 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.model.Sesion
 
 //Funcion de formateo de estetica de las tarjetas de las sesiones y funcionamiento pulsable para ir a sus previews
@@ -37,10 +39,10 @@ fun TarjetaSesion(
 
     //Se cargan los nombres de los tipos de entrega de manera mas entendible al usuario
     val etiquetasEntrega = mapOf(
-        "link_descarga" to "Galería en línea",
-        "USB" to "USB",
-        "album" to "Álbum",
-        "caja_personalizada" to "Caja personalizada"
+        "link_descarga" to stringResource(R.string.link_de_descarga),
+        "USB" to stringResource(R.string.usb),
+        "album" to stringResource(R.string.lbum),
+        "caja_personalizada" to stringResource(R.string.caja_personalizada)
     )
 
     Card(
@@ -63,7 +65,7 @@ fun TarjetaSesion(
                         fontSize = 16.sp
                     )
                     Text(
-                        text = sesion.tipo ?: "Sin tipo",
+                        text = sesion.tipo ?: stringResource(R.string.sin_tipo),
                         color = Color.Gray,
                         fontSize = 14.sp
                     )
@@ -81,7 +83,7 @@ fun TarjetaSesion(
 
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "$porcentaje% editado",
+                            text = stringResource(R.string.editado, porcentaje),
                             fontSize = 12.sp,
                             color = Color(0xFF5C6BC0),
                             fontWeight = FontWeight.Medium
@@ -89,7 +91,9 @@ fun TarjetaSesion(
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
                             progress = { porcentaje / 100f },
-                            modifier = Modifier.fillMaxWidth().height(6.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(6.dp),
                             color = Color(0xFF5C6BC0),
                             trackColor = Color(0xFFE0E0E0)
                         )
@@ -103,7 +107,11 @@ fun TarjetaSesion(
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Text(
-                                text = "${sesion.numPreviews} preview${if (sesion.numPreviews != 1) "s" else ""}",
+                                text = stringResource(
+                                    R.string.preview,
+                                    sesion.numPreviews,
+                                    if (sesion.numPreviews != 1) "s" else ""
+                                ),
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 fontSize = 12.sp,
                                 color = Color(0xFF1565C0),
@@ -116,7 +124,7 @@ fun TarjetaSesion(
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Text(
-                                text = "Sin previews",
+                                text = stringResource(R.string.sin_previews),
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 fontSize = 12.sp,
                                 color = Color.Gray,
@@ -129,7 +137,7 @@ fun TarjetaSesion(
 
                     //Tipo de entrega que se puede cambiar pulsando
                     Text(
-                        text = etiquetasEntrega[sesion.tipoEntrega] ?: "Elegir entrega",
+                        text = etiquetasEntrega[sesion.tipoEntrega] ?: stringResource(R.string.elegir_entrega),
                         fontSize = 12.sp,
                         color = Color(0xFF5B8DEF),
                         fontWeight = FontWeight.Medium,

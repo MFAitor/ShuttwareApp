@@ -47,6 +47,8 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.shuttwareapp.utils.IdiomaManager
 
 @Composable
 fun LoginScreen(
@@ -63,12 +65,14 @@ fun LoginScreen(
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        // Puedes guardar si se concedió o no, pero no es obligatorio
+
     }
 
     val context = LocalContext.current
 
     var mostrarDialogoRecuperacion by remember { mutableStateOf(false) }
+    //Variable para guardar el idioma seleccionado
+    var idiomaActual by remember { mutableStateOf(IdiomaManager.obtener(context)) }
 
     Box(
         modifier = Modifier
@@ -86,6 +90,55 @@ fun LoginScreen(
                 )
             )
     ) {
+        //Selector de idioma
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .statusBarsPadding()
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "ES",
+                    color = if (idiomaActual == "es") Color.White else Color.White.copy(alpha = 0.5f),
+                    fontSize = 14.sp,
+                    fontWeight = if (idiomaActual == "es") FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier.clickable {
+                        if (idiomaActual != "es") {
+                            idiomaActual = "es"
+                            IdiomaManager.guardar(context, "es")
+                            IdiomaManager.aplicar(context, "es")
+                            (context as? android.app.Activity)?.recreate()
+                        }
+                    }
+                )
+
+                Text(
+                    text = "|",
+                    color = Color.White.copy(alpha = 0.4f),
+                    fontSize = 14.sp
+                )
+
+                Text(
+                    text = "GL",
+                    color = if (idiomaActual == "gl") Color.White else Color.White.copy(alpha = 0.5f),
+                    fontSize = 14.sp,
+                    fontWeight = if (idiomaActual == "gl") FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier.clickable {
+                        if (idiomaActual != "gl") {
+                            idiomaActual = "gl"
+                            IdiomaManager.guardar(context, "gl")
+                            IdiomaManager.aplicar(context, "gl")
+                            (context as? android.app.Activity)?.recreate()
+                        }
+                    }
+                )
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -121,14 +174,14 @@ fun LoginScreen(
                     modifier = Modifier.padding(24.dp)
                 ) {
                     Text(
-                        text = "A C C E D E R",
+                        text = stringResource(R.string.a_c_c_e_d_e_r),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         letterSpacing = 6.sp,
                         modifier = Modifier.padding(bottom = 20.dp)
                     )
 
-                    Text("Email", fontSize = 13.sp, color = Color.Gray)
+                    Text(stringResource(R.string.email), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = email,
@@ -140,7 +193,7 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Contraseña", fontSize = 13.sp, color = Color.Gray)
+                    Text(stringResource(R.string.contrase_a), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = password,
@@ -153,7 +206,9 @@ fun LoginScreen(
                         trailingIcon = {
                             TextButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Text(
-                                    if (passwordVisible) "Ocultar" else "Mostrar",
+                                    if (passwordVisible) stringResource(R.string.ocultar) else stringResource(
+                                        R.string.mostrar
+                                    ),
                                     color = Color.Gray,
                                     fontSize = 13.sp
                                 )
@@ -165,7 +220,7 @@ fun LoginScreen(
 
                     //Enlace para abrir el dialogo de recuperacion
                     Text(
-                        text = "¿Olvidaste tu contraseña?",
+                        text = stringResource(R.string.olvidaste_tu_contrase_a),
                         color = Color(0xFF4A90E2),
                         fontSize = 13.sp,
                         modifier = Modifier
@@ -198,7 +253,7 @@ fun LoginScreen(
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A90E2))
                     ) {
-                        Text("Iniciar sesión", fontSize = 16.sp)
+                        Text(stringResource(R.string.iniciar_sesi_n), fontSize = 16.sp)
                     }
 
                     if (authViewModel.error != null) {
@@ -217,9 +272,9 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("¿Aún no tienes cuenta? ", color = Color.Gray, fontSize = 13.sp)
+                        Text(stringResource(R.string.a_n_no_tienes_cuenta), color = Color.Gray, fontSize = 13.sp)
                         Text(
-                            text = "Regístrate",
+                            text = stringResource(R.string.reg_strate),
                             color = Color(0xFF4A90E2),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
@@ -235,18 +290,17 @@ fun LoginScreen(
     if (mostrarDialogoRecuperacion) {
         AlertDialog(
             onDismissRequest = { mostrarDialogoRecuperacion = false },
-            title = { Text("¿Has olvidado tu contraseña?") },
+            title = { Text(stringResource(R.string.has_olvidado_tu_contrase_a)) },
             text = {
                 Text(
-                    "Ponte en contacto con tu fotógrafo " +
-                            "para solicitar la recuperación de tu contraseña."
+                    stringResource(R.string.ponte_en_contacto_con_tu_fot_grafo_para_solicitar_la_recuperaci_n_de_tu_contrase_a)
                 )
             },
             confirmButton = {
                 TextButton(
                     onClick = { mostrarDialogoRecuperacion = false }
                 ) {
-                    Text("Entendido")
+                    Text(stringResource(R.string.entendido))
                 }
             }
         )

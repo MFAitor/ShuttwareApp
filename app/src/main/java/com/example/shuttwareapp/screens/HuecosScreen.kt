@@ -34,10 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.components.TarjetaHueco
 import com.example.shuttwareapp.model.Hueco
 import com.example.shuttwareapp.viewmodel.HuecosViewModel
@@ -59,13 +62,17 @@ fun HuecosScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
+    //Context y locale para cambiar los dias de los meses
+    val context = LocalContext.current
+    val locale = context.resources.configuration.locales[0]
+
     //Meses que tienen huecos libres (ordenados por año y mes)
     val meses = remember(huecos) {
         huecos
             .map {
                 val mes = it.fecha.monthValue
                 val año = it.fecha.year
-                Triple(año, mes, it.fecha.month.getDisplayName(TextStyle.SHORT, Locale("es", "ES")).uppercase())
+                Triple(año, mes, it.fecha.month.getDisplayName(TextStyle.SHORT, locale).uppercase())
             }
             .distinct()
             .sortedWith(compareBy({ it.first }, { it.second }))
@@ -94,13 +101,13 @@ fun HuecosScreen(
         ) {
             Spacer(Modifier.height(12.dp))
             Text(
-                "¿Que día te encaja?, lo miramos",
+                stringResource(R.string.que_d_a_te_encaja_lo_miramos),
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 15.sp
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                "H U E C O S",
+                stringResource(R.string.h_u_e_c_o_s),
                 color = Color.White,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Light,
@@ -146,8 +153,8 @@ fun HuecosScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("DISPONIBLES", color = Color.White.copy(0.7f), fontSize = 13.sp)
-                Text("${filtrados.size} días", color = Color.White.copy(0.7f), fontSize = 13.sp)
+                Text(stringResource(R.string.disponibles), color = Color.White.copy(0.7f), fontSize = 13.sp)
+                Text(stringResource(R.string.d_as, filtrados.size), color = Color.White.copy(0.7f), fontSize = 13.sp)
             }
 
             Spacer(Modifier.height(8.dp))

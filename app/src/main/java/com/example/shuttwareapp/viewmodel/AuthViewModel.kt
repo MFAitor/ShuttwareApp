@@ -17,15 +17,17 @@ import java.util.concurrent.TimeUnit
 
 class AuthViewModel : ViewModel() {
 
-    //Almacenar los datos del API, tanto nombre como id de usuario
+    //Almacenamos el id y el nombre del usuario
     var idUsuario by mutableStateOf<Int?>(null)
         private set
+
     var nombreUsuario by mutableStateOf<String?>(null)
         private set
 
     var error by mutableStateOf<String?>(null)
         private set
 
+    //Comprobamos los datos e iniciamos sesion
     fun login(
         context: Context,
         apiService: ApiService,
@@ -35,7 +37,7 @@ class AuthViewModel : ViewModel() {
     ) {
         error = null
 
-        // Validación de campos vacíos
+        //Comprobamos que los campos no esten vacios
         if (email.isBlank() || password.isBlank()) {
             error = "Debes introducir el email y la contraseña"
             return
@@ -43,6 +45,7 @@ class AuthViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
+                //Enviamos los datos de acceso a la API
                 val response = apiService.login(
                     mapOf(
                         "email" to email,
@@ -54,6 +57,7 @@ class AuthViewModel : ViewModel() {
                     val body = response.body()
                     val usuario = body?.get("usuario") as? Map<*, *>
 
+                    //Recuperamos el id y el nombre del usuario
                     val id = (usuario?.get("id_usuario") as? Number)?.toInt()
                     val nombre = usuario?.get("nombre") as? String
 
@@ -61,34 +65,42 @@ class AuthViewModel : ViewModel() {
                         idUsuario = id
                         nombreUsuario = nombre
 
-                        //Guardar el id en preferencias para que lo pueda usar el Worker
-                        val prefs = context.getSharedPreferences("shuttware", Context.MODE_PRIVATE)
+                        //Guardamos el id para que puedan usarlo los Workers
+                        val prefs = context.getSharedPreferences(
+                            "shuttware",
+                            Context.MODE_PRIVATE
+                        )
                         prefs.edit().putInt("id_usuario", id).apply()
 
-                        // Programar la comprobacion periodica de huecos nuevos
+                        //Comprogbaciones periodicas para saltar notificaciones
                         programarComprobacionHuecos(context)
                         programarComprobacionPreviews(context)
 
                         onSuccess()
+
                     } else {
-                        // La API respondio OK pero sin usuario valido
+                        //La API ha respondido sin un usuario valido
                         error = "Datos de usuario incorrectos"
                     }
+
                 } else {
-                    // La API respondiobb con error HTTP
+                    //Error por parte del API
                     error = "Email o contraseña incorrectos"
                 }
+
             } catch (e: Exception) {
                 error = "Error de conexión"
             }
         }
     }
 
+    //Programamos la comprobacion de nuevos huecos
     private fun programarComprobacionHuecos(context: Context) {
         val request = PeriodicWorkRequestBuilder<HuecosWorker>(
             15, TimeUnit.MINUTES
         ).build()
 
+        //Registramos el trabajo periodico en WorkManager para saber cuando se abren nuevos huecos
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "comprobar_huecos",
             ExistingPeriodicWorkPolicy.KEEP,
@@ -96,7 +108,7 @@ class AuthViewModel : ViewModel() {
         )
     }
 
-    //Metodo para la creacion de un nuevo usuario, y entrar en su cuenta acto seguido
+    //Metodo para crear un usuario y entrar en su cuenta
     fun registro(
         context: Context,
         apiService: ApiService,
@@ -109,43 +121,57 @@ class AuthViewModel : ViewModel() {
         onSuccess: () -> Unit
     ) {
         error = null
+
         viewModelScope.launch {
             try {
+                //Se preparan primero los datos obligatorios para mandar a la API
                 val datos = mutableMapOf(
                     "nombre" to nombre,
                     "apellidos" to apellidos,
                     "email" to email,
                     "contrasenia" to password
                 )
-                if (!telefono.isNullOrBlank()) datos["telefono"] = telefono
-                if (!instagram.isNullOrBlank()) datos["url_instagram"] = instagram
 
+                //Anadimos el telefono y el Instagram si tienen contenido
+                if (!telefono.isNullOrBlank()) {
+                    datos["telefono"] = telefono
+                }
+
+                if (!instagram.isNullOrBlank()) {
+                    datos["url_instagram"] = instagram
+                }
+
+                //Enviamos los datos del registro a la API
                 val response = apiService.registro(datos)
 
                 if (response.isSuccessful) {
                     val body = response.body()
                     val ok = body?.get("ok") as? Boolean ?: false
+
                     if (ok) {
-                        //Login automático
-                        login(context,apiService, email, password, onSuccess)
+                        //Se inicia la sesion automaticamente
+                        login(context, apiService, email, password, onSuccess)
                     } else {
                         error = body?.get("mensaje") as? String ?: "No se pudo registrar"
                     }
+
                 } else {
                     error = "Error del servidor"
                 }
+
             } catch (e: Exception) {
                 error = "Error de conexión"
             }
         }
     }
 
-    //Comprobar si se han subido nuevas previews
+    //Programamos la comprobacion de nuevas previews
     private fun programarComprobacionPreviews(context: Context) {
         val request = PeriodicWorkRequestBuilder<PreviewsWorker>(
             15, TimeUnit.MINUTES
         ).build()
 
+        //Registramos el trabajo periodico en WorkManager para comprobar nuevas previews del ultimo usuario
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "comprobar_previews",
             ExistingPeriodicWorkPolicy.KEEP,
@@ -153,7 +179,7 @@ class AuthViewModel : ViewModel() {
         )
     }
 
-    //Metodo para desloguearse y reiniciar los datos
+    //Cerrar la sesion y limpiamos los datos del usuario
     fun logout() {
         idUsuario = null
         nombreUsuario = null

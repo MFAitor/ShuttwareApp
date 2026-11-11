@@ -30,52 +30,71 @@ class HuecosViewModel(
     private val _mensaje = MutableStateFlow<String?>(null)
     val mensaje: StateFlow<String?> = _mensaje.asStateFlow()
 
+    // Cargamos los huecos disponibles al crear el ViewModel
     init {
         cargarHuecos()
     }
 
+    //Consultamos los huecos libres de la API
     @RequiresApi(Build.VERSION_CODES.O)
     fun cargarHuecos() {
         viewModelScope.launch {
             _cargando.value = true
+
             try {
+                //Recuperamos los huecos disponibles
                 val dtos = api.obtenerHuecosLibres()
 
-                //Datos para pruebas
-                println("DTOs recibidos: ${dtos.size}")
+//              //Datos para pruebas
+//              println("DTOs recibidos: ${dtos.size}")
 
-                //Spring serializa la hora haciendo que haya descuadre de dia que hay que corregir
+                //Spring serializa la hora y puede provocar un descuadre de dia
                 _huecos.value = dtos.map { dto ->
+
+                    //Convertimos la fecha a la zona horaria de Madrid
                     val fecha = java.time.Instant.parse(dto.fecha)
                         .atZone(java.time.ZoneId.of("Europe/Madrid"))
                         .toLocalDate()
 
+                    //Creamos un objeto Hueco con los datos recibidos
                     Hueco(
                         id = dto.id_hueco,
                         fecha = fecha,
                         estado = dto.estado
                     )
-
                 }
-                //Prueba
-                println("Huecos mapeados: ${_huecos.value.size}")
+
+//              //Prueba
+//              println("Huecos mapeados: ${_huecos.value.size}")
+
             } catch (e: Exception) {
-                //Prueba 2 lineas
+                //Mostramos el error para comprobar que ha ocurrido
                 println("ERROR al cargar huecos: ${e.message}")
                 e.printStackTrace()
+
                 _mensaje.value = "No se pudieron cargar los huecos"
+
             } finally {
+                //Indicamos que la carga ha terminado
                 _cargando.value = false
             }
         }
     }
 
-
-    //Metodo que pasa los datos del usuario que quiere solicitar una sesion en un hueco libre
-    fun solicitarHueco(hueco: Hueco, tipo: String, lugar: String, nota: String, idUsuario: Int, tipoEntrega: String? = null) {
+    //Metodo que envia los datos del usuario para solicitar una sesion
+    fun solicitarHueco(
+        hueco: Hueco,
+        tipo: String,
+        lugar: String,
+        nota: String,
+        idUsuario: Int,
+        tipoEntrega: String? = null
+    ) {
         viewModelScope.launch {
             _cargando.value = true
+
             try {
+                //Preparamos los datos de la solicitud
                 val datos = SolicitudSesion(
                     idUsuario = idUsuario,
                     idHueco = hueco.id,
@@ -84,21 +103,40 @@ class HuecosViewModel(
                     nota = nota,
                     tipoEntrega = tipoEntrega
                 )
+
                 println("Enviando: $datos")
 
+                //Enviamos la solicitud a la API
                 val response = api.solicitarSesion(datos)
-                println("Código HTTP: ${response.code()}")
+
+                //Comprobamos la respuesta recibida
+                println("Codigo HTTP: ${response.code()}")
                 println("Body: ${response.body()}")
 
                 val body = response.body()
                 val ok = body?.get("ok") == true
-                _mensaje.value = if (ok) "Sesión solicitada" else (body?.get("mensaje")?.toString() ?: "Error")
-                if (ok) cargarHuecos()
+
+                //Mostramos el resultado de la solicitud
+                _mensaje.value = if (ok) {
+                    "Sesion solicitada"
+                } else {
+                    body?.get("mensaje")?.toString() ?: "Error"
+                }
+
+                //Si la solicitud ha ido bien, volvemos a cargar los huecos
+                if (ok) {
+                    cargarHuecos()
+                }
+
             } catch (e: Exception) {
-                println("Excepción: ${e.message}")
+                //Mostramos el error para comprobar que ha ocurrido
+                println("Excepcion: ${e.message}")
                 e.printStackTrace()
+
                 _mensaje.value = "Error al solicitar"
+
             } finally {
+                //Mostrar que se termina la operacion
                 _cargando.value = false
             }
         }

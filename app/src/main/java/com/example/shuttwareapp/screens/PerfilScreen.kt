@@ -114,7 +114,6 @@ fun PerfilScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Avatar
             Box(
                 modifier = Modifier
                     .size(90.dp)

@@ -155,7 +155,7 @@ fun PreviewsScreen(
                                 numero = index + 1,
                                 pie = preview.pie ?: "",
                                 idPreview = preview.id,
-                                baseUrl = "http://192.168.1.161:8080"
+                                baseUrl = "http://192.168.68.50:8080"
                             )
                         }
                     }

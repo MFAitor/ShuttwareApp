@@ -17,47 +17,43 @@ class PreviewsWorker(
 
     override suspend fun doWork(): Result {
         return try {
+
+            //Recuperamos los datos de la aplicacion
             val prefs = applicationContext.getSharedPreferences("shuttware", Context.MODE_PRIVATE)
             val ultimoId = prefs.getInt("ultimo_id_preview", 0)
-            val idUsuario = prefs.getInt("id_usuario", 0) // Asegúrate de guardar el id al hacer login
+            val idUsuario = prefs.getInt("id_usuario", 0)
 
-            if (idUsuario == 0) return Result.success()
+            //Si no hay ningun usuario guardado, no hacemos nada
+            if (idUsuario == 0) {
+                return Result.success()
+            }
 
+            //Consultamos si hay previews nuevas
             val previews = Red.api.obtenerPreviewsNuevas(idUsuario, ultimoId)
 
             if (previews.isNotEmpty()) {
+
+                //Guardamos el id mas alto recibido
                 val maxId = previews.maxOf { it.id }
                 prefs.edit().putInt("ultimo_id_preview", maxId).apply()
 
-                mostrarNotificacion(previews.size)
+                //Mostramos una notificacion con la cantidad de previews nuevas
+                NotificacionHelper().mostrarNotificacion(
+                    applicationContext,
+                    "previews_nuevas",
+                    "Previews nuevas",
+                    "Nuevas previews",
+                    "Tienes ${previews.size} preview${if (previews.size > 1) "s" else ""} nueva${if (previews.size > 1) "s" else ""}",
+                    1002
+                )
             }
 
             Result.success()
+
         } catch (e: Exception) {
+
+            //Si ocurre algun error se vuelve a intentar
             Result.retry()
         }
-    }
-
-    private fun mostrarNotificacion(cantidad: Int) {
-        val channelId = "previews_nuevas"
-        val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Previews nuevas",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            manager.createNotificationChannel(channel)
-        }
-
-        val notification = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle("Nuevas previews")
-            .setContentText("Tienes $cantidad preview${if (cantidad > 1) "s" else ""} nueva${if (cantidad > 1) "s" else ""}")
-            .setAutoCancel(true)
-            .build()
-
-        manager.notify(1002, notification)
     }
 }

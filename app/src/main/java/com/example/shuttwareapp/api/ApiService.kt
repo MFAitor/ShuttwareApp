@@ -38,8 +38,8 @@ interface ApiService {
     @PUT("clientes/{id}")
     suspend fun modificarCliente(
         @Path("id") id: Int,
-        @Body datos: Map<String, String>
-    ): Response<Map<String, Any>>
+        @Body datos: @JvmSuppressWildcards Map<String, Any>
+    ): Response<@JvmSuppressWildcards Map<String, Any>>
 
     @PUT("clientes/{id}/contrasena")
     suspend fun cambiarContrasena(

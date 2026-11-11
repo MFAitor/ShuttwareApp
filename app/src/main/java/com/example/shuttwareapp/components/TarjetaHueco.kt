@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,11 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TarjetaHueco(hueco: Hueco, onClick: () -> Unit) {
+
+    //Guardo context y cambio el "locale" en funcion del idioma
+    val context = LocalContext.current
+    val locale = context.resources.configuration.locales[0]
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +53,7 @@ fun TarjetaHueco(hueco: Hueco, onClick: () -> Unit) {
             //Día de la semana en espaniol
             Text(
                 text = hueco.fecha.dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale("es", "ES"))
+                    .getDisplayName(TextStyle.FULL, locale)
                     .replaceFirstChar { it.uppercase() },
                 color = Color.Gray,
                 fontSize = 13.sp
@@ -56,7 +62,7 @@ fun TarjetaHueco(hueco: Hueco, onClick: () -> Unit) {
             Text(
                 text = "${hueco.fecha.dayOfMonth} de ${
                     hueco.fecha.month
-                        .getDisplayName(TextStyle.FULL, Locale("es", "ES"))
+                        .getDisplayName(TextStyle.FULL,locale)
                         .replaceFirstChar { it.uppercase() }
                 }",
                 fontSize = 18.sp,
