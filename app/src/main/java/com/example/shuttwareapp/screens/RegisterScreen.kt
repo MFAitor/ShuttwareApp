@@ -33,11 +33,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.api.ApiService
 import com.example.shuttwareapp.viewmodel.AuthViewModel
 
@@ -86,12 +88,12 @@ fun RegisterScreen(
 
             // Cabecera
             Text(
-                text = "Bienvenido a Shuttware",
+                text = stringResource(R.string.bienvenido_a_shuttware),
                 color = Color.White.copy(alpha = 0.85f),
                 fontSize = 14.sp
             )
             Text(
-                text = "C R E A R   C U E N T A",
+                text = stringResource(R.string.c_r_e_a_r_c_u_e_n_t_a),
                 color = Color.White,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Light,
@@ -115,7 +117,7 @@ fun RegisterScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Nombre", fontSize = 13.sp, color = Color.Gray)
+                            Text(stringResource(R.string.nombre), fontSize = 13.sp, color = Color.Gray)
                             Spacer(modifier = Modifier.height(6.dp))
                             OutlinedTextField(
                                 value = nombre,
@@ -123,7 +125,7 @@ fun RegisterScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(12.dp),
                                 singleLine = true,
-                                placeholder = { Text("Ana") }
+                                placeholder = { Text(stringResource(R.string.ana)) }
                             )
                         }
                         Column(modifier = Modifier.weight(1f)) {
@@ -135,14 +137,14 @@ fun RegisterScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(12.dp),
                                 singleLine = true,
-                                placeholder = { Text("López Ruiz") }
+                                placeholder = { Text(stringResource(R.string.l_pez_ruiz)) }
                             )
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Email", fontSize = 13.sp, color = Color.Gray)
+                    Text(stringResource(R.string.email), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = email,
@@ -150,12 +152,12 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
-                        placeholder = { Text("ana@correo.com") }
+                        placeholder = { Text(stringResource(R.string.ana_correo_com)) }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Contraseña", fontSize = 13.sp, color = Color.Gray)
+                    Text(stringResource(R.string.contrase_a), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = password,
@@ -168,7 +170,7 @@ fun RegisterScreen(
                         trailingIcon = {
                             TextButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Text(
-                                    if (passwordVisible) "Ocultar" else "Mostrar",
+                                    if (passwordVisible) stringResource(R.string.ocultar) else stringResource(R.string.mostrar) ,
                                     color = Color.Gray,
                                     fontSize = 13.sp
                                 )
@@ -176,7 +178,7 @@ fun RegisterScreen(
                         }
                     )
                     Text(
-                        text = "Mínimo 8 caracteres",
+                        text = stringResource(R.string.m_nimo_8_caracteres),
                         fontSize = 12.sp,
                         color = Color.Gray,
                         modifier = Modifier.padding(top = 4.dp)
@@ -190,14 +192,14 @@ fun RegisterScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "OPCIONAL",
+                            text = stringResource(R.string.opcional),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             letterSpacing = 1.sp,
                             color = Color.Gray
                         )
                         Text(
-                            text = " · puedes añadirlo luego",
+                            text = stringResource(R.string.puedes_a_adirlo_luego),
                             fontSize = 12.sp,
                             color = Color.Gray
                         )
@@ -212,7 +214,7 @@ fun RegisterScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Teléfono", fontSize = 13.sp, color = Color.Gray)
+                    Text(stringResource(R.string.tel_fono), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = telefono,
@@ -220,12 +222,12 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
-                        placeholder = { Text("+34 600 000 000") }
+                        placeholder = { Text(stringResource(R.string._34_600_000_000)) }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Instagram", fontSize = 13.sp, color = Color.Gray)
+                    Text(stringResource(R.string.instagram), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = instagram,
@@ -233,7 +235,7 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
-                        placeholder = { Text("@tu_usuario") }
+                        placeholder = { Text(stringResource(R.string.tu_usuario)) }
                     )
 
                     Spacer(modifier = Modifier.height(28.dp))
@@ -263,7 +265,7 @@ fun RegisterScreen(
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A90E2))
                     ) {
-                        Text("Crea cuenta", fontSize = 16.sp)
+                        Text(stringResource(R.string.crea_cuenta), fontSize = 16.sp)
                     }
 
                     // Mostrar error si hay
@@ -283,9 +285,9 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("¿Ya tienes cuenta? ", color = Color.Gray, fontSize = 13.sp)
+                        Text(stringResource(R.string.ya_tienes_cuenta), color = Color.Gray, fontSize = 13.sp)
                         Text(
-                            text = "Inicia sesión",
+                            text = stringResource(R.string.inicia_sesi_n),
                             color = Color(0xFF4A90E2),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,

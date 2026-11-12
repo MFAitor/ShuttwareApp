@@ -38,11 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.api.ApiService
 import com.example.shuttwareapp.viewmodel.PerfilViewModel
 
@@ -130,12 +132,6 @@ fun PerfilScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "Cliente desde sep 2026",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 13.sp
-            )
-
             Spacer(modifier = Modifier.height(24.dp))
 
             //Tarjeta de datos
@@ -146,7 +142,7 @@ fun PerfilScreen(
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
-                        text = "DATOS PERSONALES",
+                        text = stringResource(R.string.datos_personales),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         letterSpacing = 1.sp,
@@ -163,7 +159,7 @@ fun PerfilScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
-                        text = "SEGURIDAD",
+                        text = stringResource(R.string.seguridad),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         letterSpacing = 1.sp,
@@ -179,11 +175,11 @@ fun PerfilScreen(
                             .padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Contraseña", modifier = Modifier.weight(1f))
+                        Text(stringResource(R.string.contrasenia), modifier = Modifier.weight(1f))
                         Text("••••••", color = Color.Gray)
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = "Cambiar ›",
+                            text = stringResource(R.string.cambiar),
                             color = Color(0xFF4A90E2),
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.clickable { mostrarCambioPass = true }
@@ -239,13 +235,13 @@ fun PerfilScreen(
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A90E2))
                     ) {
-                        Text("Guardar cambios", fontSize = 16.sp)
+                        Text(stringResource(R.string.guardar_cambios), fontSize = 16.sp)
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Cerrar sesión",
+                        text = stringResource(R.string.cerrar_sesi_n),
                         color = Color(0xFFE53935),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
@@ -307,17 +303,17 @@ private fun DialogoCambiarContrasena(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("¿Cambiar la contraseña?") },
+        title = { Text(stringResource(R.string.cambiar_la_contrase_a)) },
         text = {
             Column {
                 Text(
-                    "Usarás la nueva la próxima vez que inicies sesión.",
+                    stringResource(R.string.usar_s_la_nueva_la_pr_xima_vez_que_inicies_sesi_n),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Contraseña actual", fontSize = 13.sp)
+                Text(stringResource(R.string.contrase_a_actual), fontSize = 13.sp)
                 OutlinedTextField(
                     value = actual,
                     onValueChange = { actual = it },
@@ -332,7 +328,7 @@ private fun DialogoCambiarContrasena(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Nueva contraseña", fontSize = 13.sp)
+                Text(stringResource(R.string.nueva_contrase_a), fontSize = 13.sp)
                 OutlinedTextField(
                     value = nueva,
                     onValueChange = { nueva = it },
@@ -342,7 +338,7 @@ private fun DialogoCambiarContrasena(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Repetir nueva contraseña", fontSize = 13.sp)
+                Text(stringResource(R.string.repetir_nueva_contrase_a), fontSize = 13.sp)
                 OutlinedTextField(
                     value = repetir,
                     onValueChange = { repetir = it },
@@ -360,12 +356,12 @@ private fun DialogoCambiarContrasena(
                     }
                 }
             ) {
-                Text("Sí, cambiar")
+                Text(stringResource(R.string.s_cambiar))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+                Text(stringResource(R.string.cancelar))
             }
         }
     )

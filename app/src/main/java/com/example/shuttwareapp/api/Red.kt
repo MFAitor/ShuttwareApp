@@ -11,7 +11,7 @@ object Red {
     //Conexion con la IP donde alojo la API
 
     //Para probar por id de wifi
-    private const val BASE_URL = "http://192.168.68.50:8080/"
+    private const val BASE_URL = "http://192.168.68.55:8080/"
 
     //Para probar con ngrok
     //private const val BASE_URL = "https://retreat-disrupt-recoup.ngrok-free.dev/"

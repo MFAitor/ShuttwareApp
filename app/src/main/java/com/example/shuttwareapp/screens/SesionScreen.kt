@@ -40,9 +40,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.api.ApiService
 import com.example.shuttwareapp.model.Sesion
 import com.example.shuttwareapp.components.BotonSalir
@@ -127,7 +129,7 @@ fun MisSesionesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Todavía no tienes sesiones",
+                        text = stringResource(R.string.todav_a_no_tienes_sesiones),
                         color = Color.White
                     )
                 }
@@ -146,13 +148,13 @@ fun MisSesionesScreen(
 
                     item {
                         Text(
-                            text = "Hola $nombre",
+                            text = stringResource(R.string.hola, nombre),
                             color = Color.White.copy(alpha = 0.85f),
                             fontSize = 15.sp
                         )
 
                         Text(
-                            text = "M I S   S E S I O N E S",
+                            text = stringResource(R.string.m_i_s_s_e_s_i_o_n_e_s),
                             color = Color.White,
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Light,
@@ -174,7 +176,7 @@ fun MisSesionesScreen(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Text(
-                                text = "FILTRAR SESIONES",
+                                text = stringResource(R.string.filtrar_sesiones),
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
@@ -182,7 +184,7 @@ fun MisSesionesScreen(
                             )
 
                             SelectorDesplegable(
-                                titulo = "Estado",
+                                titulo = stringResource(R.string.estado),
                                 opciones = sesionesViewModel.estados,
                                 seleccion = sesionesViewModel.estadoSeleccionado,
                                 onSeleccionar = {
@@ -196,7 +198,7 @@ fun MisSesionesScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 SelectorFecha(
-                                    titulo = "Desde",
+                                    titulo = stringResource(R.string.desde),
                                     fecha = sesionesViewModel.fechaInicio,
                                     modifier = Modifier.weight(1f),
                                     onSeleccionar = {
@@ -213,7 +215,7 @@ fun MisSesionesScreen(
                                 )
 
                                 SelectorFecha(
-                                    titulo = "Hasta",
+                                    titulo = stringResource(R.string.hasta),
                                     fecha = sesionesViewModel.fechaFin,
                                     modifier = Modifier.weight(1f),
                                     onSeleccionar = {
@@ -235,7 +237,10 @@ fun MisSesionesScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "${sesionesViewModel.sesionesFiltradas.size} sesiones",
+                                    text = stringResource(
+                                        R.string.sesiones,
+                                        sesionesViewModel.sesionesFiltradas.size
+                                    ),
                                     color = Color.White.copy(alpha = 0.85f),
                                     fontSize = 12.sp
                                 )
@@ -243,7 +248,7 @@ fun MisSesionesScreen(
                                 Spacer(modifier = Modifier.weight(1f))
 
                                 Text(
-                                    text = "Limpiar filtros",
+                                    text = stringResource(R.string.limpiar_filtros),
                                     modifier = Modifier
                                         .clickable {
                                             sesionesViewModel.limpiarFiltros()
@@ -264,7 +269,7 @@ fun MisSesionesScreen(
                     if (sesionesViewModel.sesionesFiltradas.isEmpty()) {
                         item {
                             Text(
-                                text = "No hay sesiones con estos filtros",
+                                text = stringResource(R.string.no_hay_sesiones_con_estos_filtros),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 24.dp),
@@ -277,7 +282,7 @@ fun MisSesionesScreen(
                     if (sesionesViewModel.sesionesPendientes.isNotEmpty()) {
                         item {
                             TituloSeccion(
-                                "PENDIENTES",
+                                stringResource(R.string.pendientes),
                                 Color(0xFFFFC107),
                                 sesionesViewModel.sesionesPendientes.size
                             )
@@ -291,7 +296,7 @@ fun MisSesionesScreen(
                     if (sesionesViewModel.sesionesEnCurso.isNotEmpty()) {
                         item {
                             TituloSeccion(
-                                "EN PROCESO",
+                                stringResource(R.string.en_proceso),
                                 Color(0xFF2196F3),
                                 sesionesViewModel.sesionesEnCurso.size
                             )
@@ -305,7 +310,7 @@ fun MisSesionesScreen(
                     if (sesionesViewModel.sesionesEntregadas.isNotEmpty()) {
                         item {
                             TituloSeccion(
-                                "ENTREGADAS",
+                                stringResource(R.string.entregadas),
                                 Color(0xFF4CAF50),
                                 sesionesViewModel.sesionesEntregadas.size
                             )
@@ -319,7 +324,7 @@ fun MisSesionesScreen(
                     if (sesionesViewModel.otrasSesiones.isNotEmpty()) {
                         item {
                             TituloSeccion(
-                                "OTRAS SESIONES",
+                                stringResource(R.string.otras_sesiones),
                                 Color(0xFF9E9E9E),
                                 sesionesViewModel.otrasSesiones.size
                             )
@@ -439,7 +444,7 @@ private fun SelectorFecha(
             ) {
                 Text(
                     text = fecha?.let { formatearFecha(it) }
-                        ?: "Seleccionar",
+                        ?: stringResource(R.string.seleccionar),
                     modifier = Modifier.padding(
                         horizontal = 8.dp,
                         vertical = 12.dp

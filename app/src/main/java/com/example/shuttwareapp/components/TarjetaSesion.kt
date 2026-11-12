@@ -41,7 +41,7 @@ fun TarjetaSesion(
     val etiquetasEntrega = mapOf(
         "link_descarga" to stringResource(R.string.link_de_descarga),
         "USB" to stringResource(R.string.usb),
-        "album" to stringResource(R.string.lbum),
+        "album" to stringResource(R.string.album),
         "caja_personalizada" to stringResource(R.string.caja_personalizada)
     )
 

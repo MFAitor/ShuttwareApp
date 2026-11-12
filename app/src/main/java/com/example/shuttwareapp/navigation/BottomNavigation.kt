@@ -16,9 +16,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.shuttwareapp.R
+
 
 //Barra de navegacion por la app
 @Composable
@@ -48,7 +51,7 @@ fun MainScaffold(
                         }
                     },
                     icon = { Icon(Icons.Filled.Home, contentDescription = "Sesiones") },
-                    label = { Text("Sesiones") }
+                    label = { Text(stringResource(R.string.sesions)) }
                 )
 
                 NavigationBarItem(
@@ -59,7 +62,7 @@ fun MainScaffold(
                         }
                     },
                     icon = { Icon(Icons.Filled.DateRange, contentDescription = "Hueco") },
-                    label = { Text("Huecos") }
+                    label = { Text(stringResource(R.string.huecos)) }
                 )
 
                 NavigationBarItem(
@@ -70,7 +73,7 @@ fun MainScaffold(
                         }
                     },
                     icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
-                    label = { Text("Perfil") }
+                    label = { Text(stringResource(R.string.perfil)) }
                 )
             }
         }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,9 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.example.shuttwareapp.model.Hueco
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.example.shuttwareapp.R
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,13 +51,17 @@ fun SolicitarHuecoSheet(
 
     //Variables para las opciones de seleccion de tipo de entrega
     val opcionesEntrega = listOf(
-        "link_descarga" to "Link de descarga",
-        "USB" to "USB",
-        "album" to "Álbum",
-        "caja_personalizada" to "Caja personal"
+        "link_descarga" to stringResource(R.string.link_de_descarga),
+        "USB" to stringResource(R.string.usb),
+        "album" to stringResource(R.string.album),
+        "caja_personalizada" to stringResource(R.string.caja_personalizada)
     )
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    //Variables para la traduccion de las fechas
+    val context = LocalContext.current
+    val locale = context.resources.configuration.locales[0]
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -71,7 +76,7 @@ fun SolicitarHuecoSheet(
         ) {
             Spacer(Modifier.height(12.dp))
             Text(
-                "SOLICITAR SESIÓN",
+                stringResource(R.string.solicitar_sesi_n),
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 1.5.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -80,7 +85,7 @@ fun SolicitarHuecoSheet(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                hueco.fecha.format(DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", Locale("es")))
+                hueco.fecha.format(DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", locale))
                     .replaceFirstChar { it.uppercase() },
                 fontSize = 25.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -89,32 +94,32 @@ fun SolicitarHuecoSheet(
 
             Spacer(Modifier.height(24.dp))
 
-            Text("Tipo de sesión", fontWeight = FontWeight.Medium)
+            Text(stringResource(R.string.tipo_de_sesi_n), fontWeight = FontWeight.Medium)
             Spacer(Modifier.height(6.dp))
             OutlinedTextField(
                 value = tipo,
                 onValueChange = { tipo = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Retrato, boda, producto…") },
+                placeholder = { Text(stringResource(R.string.retrato_boda_producto)) },
                 shape = RoundedCornerShape(12.dp)
             )
 
             Spacer(Modifier.height(16.dp))
 
-            Text("Lugar de preferencia", fontWeight = FontWeight.Medium)
+            Text(stringResource(R.string.lugar_de_preferencia), fontWeight = FontWeight.Medium)
             Spacer(Modifier.height(6.dp))
             OutlinedTextField(
                 value = lugar,
                 onValueChange = { lugar = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Playa, estudio, exterior…") },
+                placeholder = { Text(stringResource(R.string.playa_estudio_exterior)) },
                 shape = RoundedCornerShape(12.dp)
             )
 
             Spacer(Modifier.height(16.dp))
 
             //Botones para elegir el tipo de entrega que se va a realizar
-            Text("Tipo de entrega (opcional)", fontWeight = FontWeight.Medium)
+            Text(stringResource(R.string.tipo_de_entrega_opcional), fontWeight = FontWeight.Medium)
             Spacer(Modifier.height(6.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -141,7 +146,7 @@ fun SolicitarHuecoSheet(
 
             Spacer(Modifier.height(16.dp))
 
-            Text("Nota para el fotógrafo (opcional)", fontWeight = FontWeight.Medium)
+            Text(stringResource(R.string.nota_para_el_fot_grafo_opcional), fontWeight = FontWeight.Medium)
             Spacer(Modifier.height(6.dp))
             OutlinedTextField(
                 value = nota,
@@ -149,7 +154,7 @@ fun SolicitarHuecoSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-                placeholder = { Text("Cuéntale qué tienes en mente…") },
+                placeholder = { Text(stringResource(R.string.cu_ntale_qu_tienes_en_mente)) },
                 shape = RoundedCornerShape(12.dp)
             )
 
@@ -164,11 +169,11 @@ fun SolicitarHuecoSheet(
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B8DEF))
             ) {
-                Text("Solicitar sesión", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Text(stringResource(R.string.solicitar_sesi_n), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Text(
-                "El fotógrafo confirmará tu solicitud",
+                stringResource(R.string.el_fot_grafo_confirmar_tu_solicitud),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),

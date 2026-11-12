@@ -22,10 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.api.ApiService
 import com.example.shuttwareapp.components.TarjetaPreview
 import com.example.shuttwareapp.model.Preview
@@ -80,18 +82,18 @@ fun PreviewsScreen(
                 IconButton(onClick = onBack) {
                     Icon(
                         Icons.Default.ArrowBack,
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(R.string.volver),
                         tint = Color.White
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        "${sesion.tipo ?: "Sesión"} · ${formatearFechaCorta(sesion.fecha)}",
+                        "${sesion.tipo ?: stringResource(R.string.sesi_n)} · ${formatearFechaCorta(sesion.fecha)}",
                         color = Color.White.copy(0.8f),
                         fontSize = 13.sp
                     )
                     Text(
-                        "P R E V I E W S",
+                        stringResource(R.string.p_r_e_v_i_e_w_s),
                         color = Color.White,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Light,
@@ -130,7 +132,7 @@ fun PreviewsScreen(
                     //Mensaje cuando la sesion aun no tiene previews
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(
-                            text = "Esta sesión todavía no tiene previews",
+                            text = stringResource(R.string.esta_sesi_n_todav_a_no_tiene_previews),
                             color = Color.White,
                             fontSize = 16.sp
                         )
@@ -155,7 +157,7 @@ fun PreviewsScreen(
                                 numero = index + 1,
                                 pie = preview.pie ?: "",
                                 idPreview = preview.id,
-                                baseUrl = "http://192.168.68.50:8080"
+                                baseUrl = "http://192.168.68.55:8080"
                             )
                         }
                     }
