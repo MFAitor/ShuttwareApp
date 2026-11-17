@@ -56,17 +56,15 @@ fun HuecosScreen(
 ) {
     val huecos by viewModel.huecos.collectAsState()
     val mensaje by viewModel.mensaje.collectAsState()
-
     var mesSeleccionado by remember { mutableStateOf(LocalDate.now().monthValue) }
     var huecoSeleccionado by remember { mutableStateOf<Hueco?>(null) }
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     //Context y locale para cambiar los dias de los meses
     val context = LocalContext.current
     val locale = context.resources.configuration.locales[0]
 
-    //Meses que tienen huecos libres (ordenados por año y mes)
+    //Meses que tienen huecos libres (ordenados por anio y mes)
     val meses = remember(huecos) {
         huecos
             .map {
@@ -79,6 +77,7 @@ fun HuecosScreen(
             .map { it.second to it.third }
     }
 
+    //Fondo con el color con degradado
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -178,7 +177,7 @@ fun HuecosScreen(
         )
     }
 
-    //Sheet para solicitar el hueco seleccionado
+    //Desplegable para solicitar el hueco seleccionado
     huecoSeleccionado?.let { h ->
         SolicitarHuecoSheet(
             hueco = h,

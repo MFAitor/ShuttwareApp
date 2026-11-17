@@ -49,6 +49,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.shuttwareapp.utils.IdiomaManager
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.imePadding
 
 @Composable
 fun LoginScreen(
@@ -101,6 +104,7 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                //Parte de selector de idioma que reacciona a la interaccion del usuario
                 Text(
                     text = "ES",
                     color = if (idiomaActual == "es") Color.White else Color.White.copy(alpha = 0.5f),
@@ -143,6 +147,8 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
+                .imePadding()                    // ← deja espacio para el teclado
+                .verticalScroll(rememberScrollState())  // ← permite hacer scroll
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -156,7 +162,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "S H U T T W A R E",
+                text = stringResource(R.string.s_h_u_t_t_w_a_r_e),
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Light,
@@ -181,6 +187,7 @@ fun LoginScreen(
                         modifier = Modifier.padding(bottom = 20.dp)
                     )
 
+                    //Introduccion de el campo email
                     Text(stringResource(R.string.email), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
@@ -195,6 +202,7 @@ fun LoginScreen(
 
                     Text(stringResource(R.string.contrase_a), fontSize = 13.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(6.dp))
+                    //Introduccion de la contrasenia
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
@@ -238,7 +246,7 @@ fun LoginScreen(
                                 email = email,
                                 password = password,
                                 onSuccess = {
-                                    // Pedir permiso de notificaciones
+                                    //Pedir permiso de notificaciones
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                     }
@@ -272,6 +280,7 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
+                        //Mensaje para que el usuario se registre si no tiene cuenta
                         Text(stringResource(R.string.a_n_no_tienes_cuenta), color = Color.Gray, fontSize = 13.sp)
                         Text(
                             text = stringResource(R.string.reg_strate),

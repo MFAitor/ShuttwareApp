@@ -28,7 +28,7 @@ class HuecosWorker(
             //Se guarda el ID mas alto si hay varios distintos
             if (huecos.isNotEmpty()) {
 
-                val maxId = huecos.maxOf { it.id_hueco }
+                val maxId = huecos.maxOf { it.id }
 
                 prefs.edit().putInt("ultimo_id_hueco", maxId).apply()
 

@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import com.example.shuttwareapp.R
 import com.example.shuttwareapp.api.ApiService
 import com.example.shuttwareapp.viewmodel.PerfilViewModel
+import androidx.compose.foundation.layout.imePadding
 
 @Composable
 fun PerfilScreen(
@@ -109,6 +110,8 @@ fun PerfilScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -291,6 +294,7 @@ private fun CampoEditable(
     }
 }
 
+//Metodo que controla el cambio de contrasenia
 @Composable
 private fun DialogoCambiarContrasena(
     onDismiss: () -> Unit,

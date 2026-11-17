@@ -86,7 +86,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Cabecera
+            //Cabecera
             Text(
                 text = stringResource(R.string.bienvenido_a_shuttware),
                 color = Color.White.copy(alpha = 0.85f),
@@ -186,7 +186,7 @@ fun RegisterScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    //Separador opcional
+                    //Separador con texto opcional
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -240,7 +240,7 @@ fun RegisterScreen(
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-                    //Botón crear cuenta
+                    //Boton crear cuenta
                     Button(
                         //Al pulsar el boton comprobamos los datos
                         onClick = {
@@ -268,7 +268,7 @@ fun RegisterScreen(
                         Text(stringResource(R.string.crea_cuenta), fontSize = 16.sp)
                     }
 
-                    // Mostrar error si hay
+                    //Mostrar error si hay
                     if (authViewModel.error != null) {
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(

@@ -8,12 +8,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.shuttwareapp.R
 import com.example.shuttwareapp.api.Red
 import com.example.shuttwareapp.screens.HuecosScreen
 import com.example.shuttwareapp.screens.LoginScreen
@@ -37,6 +39,7 @@ fun AppNavigation(
     val authViewModel: AuthViewModel = viewModel()
     val sesionesViewModel: SesionesViewModel = viewModel()
     val perfilViewModel: PerfilViewModel = viewModel()
+    val huecosViewModel: HuecosViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -45,7 +48,6 @@ fun AppNavigation(
     ) {
 
         //Se van llamando a los Composables de las distintas pantallas cargando en cada uno sus viewModel
-
         composable(Rutas.LOGIN) {
             LoginScreen(
                 apiService = apiService,
@@ -111,7 +113,6 @@ fun AppNavigation(
             val idUsuario = backStackEntry.arguments
                 ?.getString("idUsuario")?.toIntOrNull() ?: 0
 
-            val huecosViewModel: HuecosViewModel = viewModel()
 
             MainScaffold(navController = navController, idUsuario = idUsuario) {
                 HuecosScreen(
@@ -165,7 +166,7 @@ fun AppNavigation(
                     Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Cargando sesión...")
+                    Text(stringResource(R.string.cargando_sesi_n))
                 }
             }
         }

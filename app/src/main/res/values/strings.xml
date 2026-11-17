@@ -86,4 +86,6 @@
     <string name="huecos">Huecos</string>
     <string name="perfil">Perfil</string>
     <string name="sesions">Sesiones</string>
+    <string name="cargando_sesi_n">Cargando sesión...</string>
+    <string name="s_h_u_t_t_w_a_r_e">S H U T T W A R E</string>
 </resources>

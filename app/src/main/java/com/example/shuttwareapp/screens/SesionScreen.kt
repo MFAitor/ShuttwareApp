@@ -65,7 +65,7 @@ fun MisSesionesScreen(
 ) {
     val context = LocalContext.current
 
-    // Función local para no repetir la tarjeta
+    //Funcion local para no repetir la tarjeta
     val tarjeta: @Composable (Sesion) -> Unit = { sesion ->
         TarjetaSesion(
             sesion = sesion,
@@ -76,7 +76,7 @@ fun MisSesionesScreen(
         )
     }
 
-    // Cargar al entrar en la pantalla
+    //Cargar al entrar en la pantalla
     LaunchedEffect(idUsuario) {
         sesionesViewModel.cargarSesiones(apiService, idUsuario)
     }
@@ -101,6 +101,7 @@ fun MisSesionesScreen(
             )
     ) {
 
+        //Mientras carga se muestra un icono de circulo cargando
         when {
             sesionesViewModel.cargando -> {
                 Box(
@@ -111,6 +112,7 @@ fun MisSesionesScreen(
                 }
             }
 
+            //En caso de error se muestra su mensaje
             sesionesViewModel.error != null -> {
                 Box(
                     Modifier.fillMaxSize(),
@@ -123,6 +125,7 @@ fun MisSesionesScreen(
                 }
             }
 
+            //Mensaje de error personalizado cuando no se encuentran sesiones
             sesionesViewModel.sesiones.isEmpty() -> {
                 Box(
                     Modifier.fillMaxSize(),
@@ -135,6 +138,7 @@ fun MisSesionesScreen(
                 }
             }
 
+            //Cuando se encuentran sesiones se contruyen las tarjetas de las mismas con sus datos
             else -> {
                 LazyColumn(
                     modifier = Modifier
@@ -164,6 +168,7 @@ fun MisSesionesScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                     }
 
+                    //Filtros para la busqueda de sesiones concretas
                     item {
                         Column(
                             modifier = Modifier
@@ -182,6 +187,7 @@ fun MisSesionesScreen(
                                 fontWeight = FontWeight.Medium,
                                 letterSpacing = 1.sp
                             )
+
 
                             SelectorDesplegable(
                                 titulo = stringResource(R.string.estado),
@@ -266,6 +272,7 @@ fun MisSesionesScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                     }
 
+                    //Mensaje en caso de sesiones no encontradas
                     if (sesionesViewModel.sesionesFiltradas.isEmpty()) {
                         item {
                             Text(
@@ -279,6 +286,7 @@ fun MisSesionesScreen(
                         }
                     }
 
+                    //Seccion pendiente
                     if (sesionesViewModel.sesionesPendientes.isNotEmpty()) {
                         item {
                             TituloSeccion(
@@ -293,6 +301,7 @@ fun MisSesionesScreen(
                         }
                     }
 
+                    //Seccion en proceso
                     if (sesionesViewModel.sesionesEnCurso.isNotEmpty()) {
                         item {
                             TituloSeccion(
@@ -307,6 +316,7 @@ fun MisSesionesScreen(
                         }
                     }
 
+                    //Seccion otras sesiones
                     if (sesionesViewModel.sesionesEntregadas.isNotEmpty()) {
                         item {
                             TituloSeccion(
@@ -353,6 +363,7 @@ fun MisSesionesScreen(
     }
 }
 
+//Composable de la parte del selector para los filtros
 @Composable
 private fun SelectorDesplegable(
     titulo: String,

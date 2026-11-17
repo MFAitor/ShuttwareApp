@@ -2,6 +2,7 @@ package com.example.shuttwareapp.model
 
 import com.google.gson.annotations.SerializedName
 
+//Representa una sesión con todos sus datos
 data class Sesion(
     @SerializedName("id_sesion")
     val idSesion: Int = 0,

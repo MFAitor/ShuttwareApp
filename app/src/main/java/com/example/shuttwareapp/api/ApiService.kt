@@ -1,6 +1,6 @@
 package com.example.shuttwareapp.api
 
-import com.example.shuttwareapp.model.HuecoDto
+import com.example.shuttwareapp.model.Hueco
 import com.example.shuttwareapp.model.Preview
 import com.example.shuttwareapp.model.Sesion
 import com.example.shuttwareapp.model.SolicitudSesion
@@ -49,7 +49,7 @@ interface ApiService {
 
     //Carga de huecos libres
     @GET("huecos/libres")
-    suspend fun obtenerHuecosLibres(): List<HuecoDto>
+    suspend fun obtenerHuecosLibres(): List<Hueco>
 
     //Solicitar sesion en hueco libre
     @POST("sesiones")
@@ -74,7 +74,7 @@ interface ApiService {
     @GET("huecos/libres")
     suspend fun obtenerHuecosLibres(
         @Query("desdeId") desdeId: Int? = null
-    ): List<HuecoDto>
+    ): List<Hueco>
 
     //Averigua si hay nuevas previews subidas
     @GET("previews/nuevas")

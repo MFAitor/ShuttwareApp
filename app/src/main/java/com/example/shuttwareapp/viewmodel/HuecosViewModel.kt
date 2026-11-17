@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import kotlin.collections.map
-import com.example.shuttwareapp.model.HuecoDto
 import com.example.shuttwareapp.model.SolicitudSesion
+import java.time.Instant
+import java.time.ZoneId
 
 @RequiresApi(Build.VERSION_CODES.O)
 class HuecosViewModel(
@@ -42,40 +43,15 @@ class HuecosViewModel(
             _cargando.value = true
 
             try {
-                //Recuperamos los huecos disponibles
-                val dtos = api.obtenerHuecosLibres()
-
-//              //Datos para pruebas
-//              println("DTOs recibidos: ${dtos.size}")
-
-                //Spring serializa la hora y puede provocar un descuadre de dia
-                _huecos.value = dtos.map { dto ->
-
-                    //Convertimos la fecha a la zona horaria de Madrid
-                    val fecha = java.time.Instant.parse(dto.fecha)
-                        .atZone(java.time.ZoneId.of("Europe/Madrid"))
-                        .toLocalDate()
-
-                    //Creamos un objeto Hueco con los datos recibidos
-                    Hueco(
-                        id = dto.id_hueco,
-                        fecha = fecha,
-                        estado = dto.estado
-                    )
-                }
-
-//              //Prueba
-//              println("Huecos mapeados: ${_huecos.value.size}")
+                //La API devuelve Hueco
+                val respuesta = api.obtenerHuecosLibres()
+                _huecos.value = respuesta
 
             } catch (e: Exception) {
-                //Mostramos el error para comprobar que ha ocurrido
                 println("ERROR al cargar huecos: ${e.message}")
                 e.printStackTrace()
-
                 _mensaje.value = "No se pudieron cargar los huecos"
-
             } finally {
-                //Indicamos que la carga ha terminado
                 _cargando.value = false
             }
         }
