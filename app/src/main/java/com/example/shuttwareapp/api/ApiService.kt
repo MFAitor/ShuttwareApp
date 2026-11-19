@@ -47,10 +47,6 @@ interface ApiService {
         @Body datos: Map<String, String>
     ): Response<Map<String, Any>>
 
-    //Carga de huecos libres
-    @GET("huecos/libres")
-    suspend fun obtenerHuecosLibres(): List<Hueco>
-
     //Solicitar sesion en hueco libre
     @POST("sesiones")
     suspend fun solicitarSesion(@Body datos: SolicitudSesion): Response<Map<String, Any>>
