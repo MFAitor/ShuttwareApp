@@ -10,13 +10,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 import kotlin.jvm.java
+import java.time.Instant
+import java.time.ZoneId
 
 object Red {
 
     //Conexion con la IP donde alojo la API
 
     //Para probar por id de wifi
-    private const val BASE_URL = "http://192.168.1.154:8080/"
+    private const val BASE_URL = "http://192.168.1.158:8080/"
     //private const val BASE_URL = "http://172.20.10.3:8080/"
 
     //Para probar con ngrok
@@ -35,9 +37,11 @@ object Red {
             LocalDate::class.java,
             JsonDeserializer { json, _, _ ->
                 val texto = json.asString
-                // Si viene con hora (formato ISO), nos quedamos solo con la fecha
                 if (texto.contains("T")) {
-                    LocalDate.parse(texto.substring(0, 10))
+                    // Viene como Instant en UTC → lo convertimos a la zona de España
+                    Instant.parse(texto)
+                        .atZone(ZoneId.of("Europe/Madrid"))
+                        .toLocalDate()
                 } else {
                     LocalDate.parse(texto)
                 }

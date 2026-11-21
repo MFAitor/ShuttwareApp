@@ -77,6 +77,20 @@ fun HuecosScreen(
             .map { it.second to it.third }
     }
 
+    // Recarga los huecos cada vez que la pantalla se vuelve a mostrar
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                viewModel.cargarHuecos()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     //Fondo con el color con degradado
     Box(
         modifier = Modifier
