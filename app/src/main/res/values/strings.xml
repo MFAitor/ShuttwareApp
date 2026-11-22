@@ -8,7 +8,7 @@
     <string name="sin_tipo">Sin tipo</string>
     <string name="sin_previews">Sin previews</string>
     <string name="elegir_entrega">Elegir entrega</string>
-    <string name="editado">%1$d% editado</string>
+    <string name="editado">Editado: %d%%</string>
     <string name="preview">%1$d preview%2$s</string>
     <string name="que_d_a_te_encaja_lo_miramos">¿Que día te encaja?, lo miramos</string>
     <string name="h_u_e_c_o_s">H U E C O S</string>

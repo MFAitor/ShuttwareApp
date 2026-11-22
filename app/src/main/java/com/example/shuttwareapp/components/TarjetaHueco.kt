@@ -26,6 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shuttwareapp.model.Hueco
+import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -38,6 +41,11 @@ fun TarjetaHueco(hueco: Hueco, onClick: () -> Unit) {
     //Guardo context y cambio el "locale" en funcion del idioma
     val context = LocalContext.current
     val locale = context.resources.configuration.locales[0]
+
+    //Parseamos la fecha que viene como String (ajustada a España)
+    val fechaLocal = OffsetDateTime.parse(hueco.fecha)
+        .atZoneSameInstant(ZoneId.of("Europe/Madrid"))
+        .toLocalDate()
 
     Row(
         modifier = Modifier
@@ -52,7 +60,7 @@ fun TarjetaHueco(hueco: Hueco, onClick: () -> Unit) {
         Column {
             //Día de la semana en espaniol
             Text(
-                text = hueco.fecha.dayOfWeek
+                text = fechaLocal.dayOfWeek
                     .getDisplayName(TextStyle.FULL, locale)
                     .replaceFirstChar { it.uppercase() },
                 color = Color.Gray,
@@ -60,9 +68,9 @@ fun TarjetaHueco(hueco: Hueco, onClick: () -> Unit) {
             )
             //Formateo de fecha tipo "15 de marzo"
             Text(
-                text = "${hueco.fecha.dayOfMonth} de ${
-                    hueco.fecha.month
-                        .getDisplayName(TextStyle.FULL,locale)
+                text = "${fechaLocal.dayOfMonth} de ${
+                    fechaLocal.month
+                        .getDisplayName(TextStyle.FULL, locale)
                         .replaceFirstChar { it.uppercase() }
                 }",
                 fontSize = 18.sp,

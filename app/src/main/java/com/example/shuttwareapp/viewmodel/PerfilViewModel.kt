@@ -80,7 +80,7 @@ class PerfilViewModel : ViewModel() {
                     }
                 }
 
-                if (instagram.isNotBlank()) datos["url_instagram"] = instagram.trim()
+                if (instagram.isNotBlank()) datos["instagram"] = instagram.trim()
 
                 val response = apiService.modificarCliente(id, datos)
 

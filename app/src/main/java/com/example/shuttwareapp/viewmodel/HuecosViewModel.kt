@@ -45,6 +45,12 @@ class HuecosViewModel(
             try {
                 //La API devuelve Hueco
                 val respuesta = api.obtenerHuecosLibres()
+
+                println("=== HUECOS RECIBIDOS ===")
+                respuesta.forEach {
+                    println("id=${it.id} | fecha=${it.fecha} | estado=${it.estado}")
+                }
+
                 _huecos.value = respuesta
 
             } catch (e: Exception) {

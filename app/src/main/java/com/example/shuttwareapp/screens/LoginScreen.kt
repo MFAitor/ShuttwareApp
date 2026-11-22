@@ -52,6 +52,7 @@ import com.example.shuttwareapp.utils.IdiomaManager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.zIndex
 
 @Composable
 fun LoginScreen(
@@ -93,56 +94,6 @@ fun LoginScreen(
                 )
             )
     ) {
-        //Selector de idioma
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .statusBarsPadding()
-                .padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                //Parte de selector de idioma que reacciona a la interaccion del usuario
-                Text(
-                    text = "ES",
-                    color = if (idiomaActual == "es") Color.White else Color.White.copy(alpha = 0.5f),
-                    fontSize = 14.sp,
-                    fontWeight = if (idiomaActual == "es") FontWeight.Bold else FontWeight.Normal,
-                    modifier = Modifier.clickable {
-                        if (idiomaActual != "es") {
-                            idiomaActual = "es"
-                            IdiomaManager.guardar(context, "es")
-                            IdiomaManager.aplicar(context, "es")
-                            (context as? android.app.Activity)?.recreate()
-                        }
-                    }
-                )
-
-                Text(
-                    text = "|",
-                    color = Color.White.copy(alpha = 0.4f),
-                    fontSize = 14.sp
-                )
-
-                Text(
-                    text = "GL",
-                    color = if (idiomaActual == "gl") Color.White else Color.White.copy(alpha = 0.5f),
-                    fontSize = 14.sp,
-                    fontWeight = if (idiomaActual == "gl") FontWeight.Bold else FontWeight.Normal,
-                    modifier = Modifier.clickable {
-                        if (idiomaActual != "gl") {
-                            idiomaActual = "gl"
-                            IdiomaManager.guardar(context, "gl")
-                            IdiomaManager.aplicar(context, "gl")
-                            (context as? android.app.Activity)?.recreate()
-                        }
-                    }
-                )
-            }
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -291,6 +242,53 @@ fun LoginScreen(
                         )
                     }
                 }
+            }
+        }
+
+        //Selector de idioma (va después de la Column para quedar por encima y ser clicable)
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .statusBarsPadding()
+                .padding(16.dp)
+                .zIndex(1f)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                //Parte de selector de idioma que reacciona a la interaccion del usuario
+                Text(
+                    text = "ES",
+                    color = if (idiomaActual == "es") Color.White else Color.White.copy(alpha = 0.5f),
+                    fontSize = 14.sp,
+                    fontWeight = if (idiomaActual == "es") FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier.clickable {
+                        if (idiomaActual != "es") {
+                            IdiomaManager.guardar(context, "es")
+                            (context as android.app.Activity).recreate()
+                        }
+                    }
+                )
+
+                Text(
+                    text = "|",
+                    color = Color.White.copy(alpha = 0.4f),
+                    fontSize = 14.sp
+                )
+
+                Text(
+                    text = "GL",
+                    color = if (idiomaActual == "gl") Color.White else Color.White.copy(alpha = 0.5f),
+                    fontSize = 14.sp,
+                    fontWeight = if (idiomaActual == "gl") FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier.clickable {
+                        if (idiomaActual != "gl") {
+                            IdiomaManager.guardar(context, "gl")
+                            (context as android.app.Activity).recreate()
+                        }
+                    }
+                )
             }
         }
     }

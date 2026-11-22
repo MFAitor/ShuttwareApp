@@ -1,7 +1,6 @@
 package com.example.shuttwareapp.screens
 
 import android.os.Build
-import android.widget.Space
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,8 +44,9 @@ import com.example.shuttwareapp.components.TarjetaHueco
 import com.example.shuttwareapp.model.Hueco
 import com.example.shuttwareapp.viewmodel.HuecosViewModel
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.format.TextStyle
-import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -68,9 +68,12 @@ fun HuecosScreen(
     val meses = remember(huecos) {
         huecos
             .map {
-                val mes = it.fecha.monthValue
-                val año = it.fecha.year
-                Triple(año, mes, it.fecha.month.getDisplayName(TextStyle.SHORT, locale).uppercase())
+                val fecha = OffsetDateTime.parse(it.fecha)
+                    .atZoneSameInstant(ZoneId.of("Europe/Madrid"))
+                    .toLocalDate()
+                val mes = fecha.monthValue
+                val año = fecha.year
+                Triple(año, mes, fecha.month.getDisplayName(TextStyle.SHORT, locale).uppercase())
             }
             .distinct()
             .sortedWith(compareBy({ it.first }, { it.second }))
@@ -159,7 +162,10 @@ fun HuecosScreen(
             Spacer(Modifier.height(12.dp))
 
             val filtrados = huecos.filter {
-                it.fecha.monthValue == mesSeleccionado && it.estado == "libre"
+                val fecha = OffsetDateTime.parse(it.fecha)
+                    .atZoneSameInstant(ZoneId.of("Europe/Madrid"))
+                    .toLocalDate()
+                fecha.monthValue == mesSeleccionado && it.estado == "libre"
             }
 
             Row(

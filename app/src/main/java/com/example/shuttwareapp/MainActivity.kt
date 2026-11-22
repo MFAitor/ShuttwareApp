@@ -29,6 +29,8 @@ class MainActivity : ComponentActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         val codigo = IdiomaManager.obtener(newBase)
+        android.util.Log.d("IDIOMA", "Aplicando idioma: $codigo")
+
         val locale = Locale(codigo)
         Locale.setDefault(locale)
         val config = Configuration(newBase.resources.configuration)
