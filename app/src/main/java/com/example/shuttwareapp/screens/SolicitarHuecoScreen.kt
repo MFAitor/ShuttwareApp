@@ -84,9 +84,18 @@ fun SolicitarHuecoSheet(
 
             Spacer(Modifier.height(24.dp))
 
+            // Formatear la fecha que llega como String ISO
+            val fechaFormateada = try {
+                val instant = java.time.Instant.parse(hueco.fecha)
+                val localDate = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+                localDate.format(DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", locale))
+                    .replaceFirstChar { it.uppercase() }
+            } catch (e: Exception) {
+                hueco.fecha // fallback por si falla el parseo
+            }
+
             Text(
-                hueco.fecha.format(DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", locale))
-                    .replaceFirstChar { it.uppercase() },
+                text = fechaFormateada,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(0xFF5B8DEF)
