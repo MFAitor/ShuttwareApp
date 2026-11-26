@@ -19,7 +19,8 @@ object Red {
 
     //Para probar por id de wifi
     //private const val BASE_URL = "http://192.168.1.158:8080/"
-    private const val BASE_URL = "http://172.20.10.3:8080/"
+    //private const val BASE_URL = "http://172.20.10.3:8080/"
+    private const val BASE_URL = "http://192.168.68.55:8080/"
 
     //Para probar con ngrok
     //private const val BASE_URL = "https://retreat-disrupt-recoup.ngrok-free.dev/"
@@ -38,7 +39,7 @@ object Red {
             JsonDeserializer { json, _, _ ->
                 val texto = json.asString
                 if (texto.contains("T")) {
-                    // Viene como Instant en UTC → lo convertimos a la zona de España
+                    //Viene como Instant en UTC → lo convertimos a la zona de España
                     Instant.parse(texto)
                         .atZone(ZoneId.of("Europe/Madrid"))
                         .toLocalDate()
